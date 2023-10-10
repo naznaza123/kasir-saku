@@ -4,56 +4,118 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengeluaran;
+use App\Models\Siswa;
+use App\Models\Kategori;
 
 class PengeluaranController extends Controller
 {
+
     //
-    function show(){
+    public function index(){
         $data['pengeluaran'] = Pengeluaran::all();
-        return view('pengeluaran',$data);
+        return view('kas.index-pengeluaran',$data);
     }
-    function add(){
+    // function showhistory(){
+    //     $data['pengeluaran'] = Pengeluaran::all();
+    //     return view('history',$data);
+    // }
+   public function create(){
         $data =[
-            'action' => url('pengeluaran/create'),
+            'action' => url('pengeluaran/store'),
             'tombol' => 'SIMPAN',
             'pengeluaran' => (object)[
-                'id'=>'',
+                // 'nis'=>'',
+                'nama'=>'',
                 'tanggal'=>'',
-                'nama_barang'=>'',
-                'harga_barang'=>'',
-                'keterangan'=>'',
+                // 'jns'=>'',
+                'kategori'=>'',
+                'uang'=>'',
+                'ket'=>'',
             ]
             ];
-            return view('form_pengeluaran',$data);
+            $kateg=Kategori::all();
+             $namas=Siswa::all();
+            return view('kas.create-pengeluaran',compact('namas','kateg'), $data);
     }
-    function create(Request $request){ 
+    public function store(Request $request){ 
+       
+        
+        $this->validate($request,[
+            'nama'=>'required|min:3 ',
+            // 'jns'=>'required',
+            'ket'=>'required',
+            'kategori'=>'required',
+
+        ],[
+            'nama.required'=>'nama tidak boleh kosong',
+            // 'jns.required'=>'jns tidak boleh kosong',
+            'ket.required'=>'keterangan tidak boleh kosong',
+            'nama.min'=>'nama harus lebih dari 3 karakter',
+            'kategori.required'=>'kategori tidak boleh kosong',
+
+        ]
+        
+        );
+
         Pengeluaran::create([
-            'id' => $request->id,
+            // 'nis' => $request->nis,
+            'nama' => $request->nama,
             'tanggal' => $request->tanggal,
-            'nama_barang' => $request->nama_barang,
-            'harga_barang' => $request->harga_barang,
-            'keterangan' => $request->keterangan
+            // 'jns' => $request->jns,
+            'kategori' => $request->kategori,
+            'uang' => $request->uang,
+            'ket'=> $request->ket,
         ]);
-        return redirect ('pengeluaran');
-}
-function edit($id){
-    $data['pengeluaran'] = Pengeluaran::find($id);
-    $data['action'] = url('pengeluaran/update').'/'.$data['pengeluaran']->id;
-    $data['tombol'] = "Update";
-    return view('form_pengeluaran',$data);
-}
-function update(Request $request){
-    Pengeluaran::where('id',$request->id)->update([
-        'id' => $request->id,
-        'tanggal' => $request->tanggal,
-        'nama_barang' => $request->nama_barang,
-        'harga_barang' => $request->harga_barang,
-        'keterangan' => $request->keterangan
-    ]);
-    return redirect ('pengeluaran');
-}
-function hapus($id){
-    Pengeluaran::where('id',$id)->delete();
-    return redirect('pengeluaran');
-}
+        
+        return redirect()->route('pengeluaran');
+
+    }
+    public function edit($id){
+        $data['pengeluaran'] = Pengeluaran::find($id);
+        $data['action'] = url('pengeluaran/update').'/'.$data['pengeluaran']->id;
+        $data['tombol'] = "Update";
+        $kateg=Kategori::all();
+        $namas=Siswa::all();
+        return view('kas.create-pengeluaran',compact('namas','kateg'),$data);
+        
+    }
+    public function update(Request $request){
+
+        $this->validate($request,[
+            'nama'=>'required|min:3 ',
+            // 'jns'=>'required',
+            'ket'=>'required',
+            'kategori'=>'required',
+
+        ],[
+            'nama.required'=>'nama tidak boleh kosong',
+            // 'jns.required'=>'jns tidak boleh kosong',
+            'ket.required'=>'keterangan tidak boleh kosong',
+            'kategori.required'=>'ketegori tidak boleh kosong',
+            'nama.min'=>'nama harus lebih dari 3 karakter',
+
+        ]
+        
+        );
+
+        Pengeluaran::where('id',$request->id)->update([
+            // 'nis' => $request->nis,
+            'nama' => $request->nama,
+            'tanggal' => $request->tanggal,
+            // 'jns' => $rppengeequest->jns,
+            'uang' => $request->uang,
+            'ket' => $request->ket,
+        ]);
+        // return redirect ('kas.index-pengeluaran');
+        return redirect()->route('pengeluaran');
+
+    }
+    public function destroy($id){
+        Pengeluaran::where('id',$id)->delete();
+
+        // return redirect('kas.index-pengeluaran');
+        return redirect()->route('pengeluaran');
+
+    }
+    
 }

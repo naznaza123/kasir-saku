@@ -9,10 +9,10 @@ use App\Models\User;
 class AuthController extends Controller
 {
     //
-    function login(){
+    function login(){   
         return view('welcome');
     }
-    function auth(Request $request){
+function auth(Request $request){
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],

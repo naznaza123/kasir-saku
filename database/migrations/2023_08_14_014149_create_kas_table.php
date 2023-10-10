@@ -15,11 +15,13 @@ class CreateKasTable extends Migration
     {
         Schema::create('kas', function (Blueprint $table) {
             $table->id();
-            $table->string('nis');
+            // $table->string('nis');
             $table->string('nama');
             $table->string('tanggal');
-            $table->string('uang');
-            $table->enum('ket',['Lunas','Belumbayar']);
+            // $table->enum('jns',['pemasukan','pengeluaran']);
+            $table->string('kategori');
+            $table->decimal('uang',10,2);
+            $table->string('ket');
             $table->timestamps();
         });
     }

@@ -144,7 +144,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <style>
             body{
-            background-color: rgb(255, 255, 255);
+            background-color: rgba(255, 255, 255, 0.644);
             justify-content: center;
             }
     </style>
